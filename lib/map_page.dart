@@ -6,7 +6,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:positioned_tap_detector_2/positioned_tap_detector_2.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final LatLng initLocation;
+  const MapPage({super.key, required this.initLocation});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -14,6 +15,12 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   LatLng? pinLocation;
+  @override
+  void initState() {
+    pinLocation = widget.initLocation;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +37,12 @@ class _MapPageState extends State<MapPage> {
             Flexible(
               child: FlutterMap(
                 options: MapOptions(
-                    center: LatLng(45.5231, -122.6765),
-                    zoom: 13,
-                    onTap: _handleTap),
+                  center: pinLocation,
+                  zoom: 18,
+                  maxZoom: 18,
+                  minZoom: 6,
+                  onTap: _handleTap,
+                ),
                 children: [
                   TileLayer(
                     urlTemplate:

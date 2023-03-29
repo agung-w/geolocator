@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geolocator_test/map_page.dart';
+import 'package:latlong2/latlong.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,6 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String address = "";
+    Location? locations;
     return Scaffold(
       body: Center(
         child: Column(children: [
@@ -26,7 +28,7 @@ class HomePage extends StatelessWidget {
           ),
           ElevatedButton(
               onPressed: () async {
-                Location locations = await _determineLocationByAddress(address);
+                locations = await _determineLocationByAddress(address);
                 log(locations.toString());
               },
               child: const Text("Tes")),
@@ -41,7 +43,11 @@ class HomePage extends StatelessWidget {
           ElevatedButton(
               onPressed: () async {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const MapPage(),
+                  builder: (context) => MapPage(
+                    initLocation: locations != null
+                        ? LatLng(locations!.latitude, locations!.longitude)
+                        : LatLng(0, 0),
+                  ),
                 ));
               },
               child: const Text("Open Map")),
